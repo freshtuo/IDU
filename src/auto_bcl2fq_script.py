@@ -8,7 +8,7 @@
 Created on Tue Sep  3 12:55:03 2019
 
 @author: taz2008
-@version: 1.0
+@version: 1.01
 """
 
 import sys
@@ -230,7 +230,7 @@ def makeScript(theaders, tsamples, tinfo, tgrpdic, tmergedic, tmaskdic, toutfile
                                 fout.write("  --no-lane-splitting")
                         fout.write(" >run_bcl2fq.%d.log\n\n"%(tj+1))
 
-ver = "1.0"
+ver = "1.01"
 
 # main
 if __name__ != "__main__":
@@ -247,6 +247,7 @@ parser.add_argument("-b", "--bcl2fastq", nargs="?", required=False, default="/us
 parser.add_argument("-o", "--script", nargs="?", required=False, default="run_bcl2fq.sh", help="output script name", metavar="script_file", dest="outfilename")
 parser.add_argument("-f", "--force", action="store_true", required=False, default=False, help="whether or not to overwrite output script if existing", dest="force")
 parser.add_argument("-n", "--no-lane-splitting", action="store_true", required=False, default=False, help="whether or not to add --no-lane-splitting option to shell script", dest="nosplit")
+parser.add_argument("-x", "--nextseqrun", action="store_true", required=False, default=False, help="the name of 'runParameters.xml' file from NextSeq runs is slightly different, i.e. the first letter is capital.", dest="nextseq")
 
 # parse arguments
 args = parser.parse_args()
@@ -260,6 +261,10 @@ overwrite = args.force
 nosplit = args.nosplit
 samplesheetdir = workdir + "/Data/Intensities/BaseCalls/"
 runparfile = workdir + "/runParameters.xml"
+
+# confirm runParameters.xml file
+if args.nextseq:
+	runparfile = workdir + "/RunParameters.xml"
 
 # samplesheet file exists?
 if not os.path.exists(infile):
