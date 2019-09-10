@@ -138,39 +138,35 @@ def mergeGroups(tgrpdic, tmisdic):
                         tmergedic[tid].append(tgrp)
         return tmergedic
 
-def getVal(patname,targetstr):
+def getVal(patname,targetStrList):
         # search for <patname>val</patname> in xml file
-        tpat = search("<%s>(.*)</%s>"%(patname,patname),targetstr)
-        if tpat:
-                return (True,atoi(tpat.groups()[0]))
-        else:
-                return (False,None)
+        for targetstr in targetStrList:
+                tpat = search("<%s>(.*)</%s>"%(patname,patname),targetstr)
+                if tpat:
+                        return (True,atoi(tpat.groups()[0]))
+        return (False,None)
 
-def fetchSeqInfo(trunparfile):
+def fetchSeqInfo(trunparfile, tr1id, ti1id, ti2id, tr2id):
         # extract sequencing length info
         with open(trunparfile, 'r') as fseq:
                 rp = fseq.readlines()
-                # Read 1 line
-                tk = 0
-                while tk != len(rp):
-                        mark,r1 = getVal("Read1",rp[tk])
-                        if mark:
-                                break
-                        tk += 1
-                if tk == len(rp):
+                # get read 1 length
+                mark,r1 = getVal(tr1id, rp)
+                if not mark:
                         print "Failed to locate <Read1>?</Read1>"
                         sys.exit(98)
-                # get read/index length
-                mark,r1 = getVal("Read1", rp[tk])
-                mark,i1 = getVal("IndexRead1",rp[tk+1])
+                # get index 1 length
+                mark,i1 = getVal(ti1id, rp)
                 if not mark:
                         print "Failed to locate <IndexRead1>?</IndexRead1>"
                         sys.exit(97)
-                mark,i2 = getVal("IndexRead2",rp[tk+2])
+                # get index 2 length
+                mark,i2 = getVal(ti2id, rp)
                 if not mark:
                         print "Failed to locate <IndexRead2>?</IndexRead2>"
                         sys.exit(96)
-                mark,r2 = getVal("Read2",rp[tk+3])
+                # get read 2 length
+                mark,r2 = getVal(tr2id, rp)
                 if not mark:
                         print "Failed to locate <Read2>?</Read2>"
                         sys.exit(95)
@@ -262,9 +258,19 @@ nosplit = args.nosplit
 samplesheetdir = workdir + "/Data/Intensities/BaseCalls/"
 runparfile = workdir + "/runParameters.xml"
 
-# confirm runParameters.xml file
+# labels for acquiring read length for read1, read2, index1, index2
+r1id = "Read1"
+r2id = "Read2"
+i1id = "IndexRead1"
+i2id = "IndexRead2"
+
+# modify for NextSeq runs
 if args.nextseq:
-	runparfile = workdir + "/RunParameters.xml"
+        # runParameters.xml file
+        runparfile = workdir + "/RunParameters.xml"
+        # labels for index reads
+        i1id = "Index1Read"
+        i2id = "Index2Read"
 
 # samplesheet file exists?
 if not os.path.exists(infile):
@@ -283,7 +289,7 @@ if os.path.exists(outfile) and not overwrite:
         sys.exit(3)
 
 # get sequencing length info
-r1,i1,i2,r2 = fetchSeqInfo(runparfile)
+r1,i1,i2,r2 = fetchSeqInfo(runparfile, r1id, i1id, i2id, r2id)
 #print r1,i1,i2,r2
 
 # split header and sample info
