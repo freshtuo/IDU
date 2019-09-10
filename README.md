@@ -3,7 +3,7 @@ Illumina Demux Utilities
 
 Scripts for automating the demux process for Illumina sequencing platform:
 
-- auto_bcl2fq_script.py
+- auto_bcl2fq_script.py   
   Given a samplesheet, the script automatically detects different types of barcodes (libraries) in it, and generates sub-samplesheet files as well as a shell script for demux.
 ```
 	usage: auto_bcl2fq_script.py [-h] [-v] [-r [RUNFOLDER]] -i [samplesheet_file]
