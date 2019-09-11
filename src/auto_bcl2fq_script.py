@@ -243,7 +243,7 @@ parser.add_argument("-b", "--bcl2fastq", nargs="?", required=False, default="/us
 parser.add_argument("-o", "--script", nargs="?", required=False, default="run_bcl2fq.sh", help="output script name", metavar="script_file", dest="outfilename")
 parser.add_argument("-f", "--force", action="store_true", required=False, default=False, help="whether or not to overwrite output script if existing", dest="force")
 parser.add_argument("-n", "--no-lane-splitting", action="store_true", required=False, default=False, help="whether or not to add --no-lane-splitting option to shell script", dest="nosplit")
-parser.add_argument("-x", "--nextseqrun", action="store_true", required=False, default=False, help="the name of 'runParameters.xml' file from NextSeq runs is slightly different, i.e. the first letter is capital.", dest="nextseq")
+parser.add_argument("-p", "--platform", nargs="?", required=False, default="hiseq", choices=["hiseq","nextseq","novaseq"], help="sequencing platform", dest="platform")
 
 # parse arguments
 args = parser.parse_args()
@@ -258,19 +258,27 @@ nosplit = args.nosplit
 samplesheetdir = workdir + "/Data/Intensities/BaseCalls/"
 runparfile = workdir + "/runParameters.xml"
 
-# labels for acquiring read length for read1, read2, index1, index2
+# labels for acquiring read length for read1, read2, index1, index2 (default sequencing platform: HiSeq)
 r1id = "Read1"
 r2id = "Read2"
 i1id = "IndexRead1"
 i2id = "IndexRead2"
 
-# modify for NextSeq runs
-if args.nextseq:
+# modify for NextSeq/NovaSeq runs
+if args.platform == "nextseq":
         # runParameters.xml file
         runparfile = workdir + "/RunParameters.xml"
         # labels for index reads
         i1id = "Index1Read"
         i2id = "Index2Read"
+elif args.platform == "novaseq":
+        # runParameters.xml file
+        runparfile = workdir + "/RunParameters.xml"
+        # labels for reads
+        r1id = "Read1NumberOfCycles"
+        r2id = "Read2NumberOfCycles"
+        i1id = "IndexRead1NumberOfCycles"
+        i2id = "IndexRead2NumberOfCycles"
 
 # samplesheet file exists?
 if not os.path.exists(infile):
