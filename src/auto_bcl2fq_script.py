@@ -24,6 +24,10 @@ def diff(idx1, idx2):
 
 def minDiff(tidxList):
         # calculate the minimum distance between each pair of indexes with in a index group
+        # only one index? then return the length of that index
+        if len(tidxList) == 1:
+                return len(tidxList[0])
+        # more than one index, check distance between each pair of indexes
         tdis = []
         for ti in xrange(len(tidxList)):
                 for tj in xrange(ti+1, len(tidxList)):
