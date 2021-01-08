@@ -247,7 +247,7 @@ parser.add_argument("-b", "--bcl2fastq", nargs="?", required=False, default="/us
 parser.add_argument("-o", "--script", nargs="?", required=False, default="run_bcl2fq.sh", help="output script name", metavar="script_file", dest="outfilename")
 parser.add_argument("-f", "--force", action="store_true", required=False, default=False, help="whether or not to overwrite output script if existing", dest="force")
 parser.add_argument("-n", "--no-lane-splitting", action="store_true", required=False, default=False, help="whether or not to add --no-lane-splitting option to shell script", dest="nosplit")
-parser.add_argument("-p", "--platform", nargs="?", required=False, default="hiseq", choices=["hiseq","nextseq","novaseq"], help="sequencing platform", dest="platform")
+parser.add_argument("-p", "--platform", nargs="?", required=False, default="hiseq", choices=["hiseq","nextseq500","nextseq2000","novaseq"], help="sequencing platform", dest="platform")
 
 # parse arguments
 args = parser.parse_args()
@@ -269,12 +269,18 @@ i1id = "IndexRead1"
 i2id = "IndexRead2"
 
 # modify for NextSeq/NovaSeq runs
-if args.platform == "nextseq":
+if args.platform == "nextseq500":
         # runParameters.xml file
         runparfile = workdir + "/RunParameters.xml"
         # labels for index reads
         i1id = "Index1Read"
         i2id = "Index2Read"
+elif args.platform == "nextseq2000":
+        # runParameters.xml file
+        runparfile = workdir + "/RunParameters.xml"
+        # labels for index reads
+        i1id = "Index1"
+        i2id = "Index2"
 elif args.platform == "novaseq":
         # runParameters.xml file
         runparfile = workdir + "/RunParameters.xml"
