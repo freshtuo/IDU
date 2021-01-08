@@ -29,6 +29,8 @@ Scripts for automating the demux process for Illumina sequencing platform:
 	  -n, --no-lane-splitting
 	                        whether or not to add --no-lane-splitting option to
 	                        shell script
+	  -p [{hiseq,nextseq500,nextseq2000,novaseq}], --platform [{hiseq,nextseq500,nextseq2000,novaseq}]
+ 	                        sequencing platform
 	
 	Examples:
 	auto_bcl2fq_script.py -i /gc4/HiSeq4000/flowcellA/190828_ST-K00128_0425_AHF2NMBBXY/Data/Intensities/BaseCalls/Hiseq4000FCA_08282019.csv  -s 2  -r /gc4/HiSeq4000/flowcellA/190828_ST-K00128_0425_AHF2NMBBXY
